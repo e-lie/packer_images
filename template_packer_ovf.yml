@@ -1,0 +1,5 @@
+- name: Template Packer files to produce OVF from linux ISO
+  hosts: localhost
+
+  roles:
+    - name: packer_virtualbox_iso_ovf

@@ -1,0 +1,12 @@
+{
+  "builders": [
+    {
+      "type": "hcloud",
+      "token": "{{ packer_hcloud_api_token }}",
+      "image": "ubuntu-18.04",
+      "location": "nbg1",
+      "server_type": "cx11",
+      "ssh_username": "root"
+    }
+  ]
+}

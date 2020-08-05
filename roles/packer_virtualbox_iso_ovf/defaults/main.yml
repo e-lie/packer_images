@@ -1,0 +1,43 @@
+packer_ovf_iso_checksum: "sha256:e2ecdace33c939527cbc9e8d23576381c493b071107207d2040af72595f8990b"
+packer_ovf_iso_url: "http://cdimage.ubuntu.com/ubuntu/releases/bionic/release/ubuntu-18.04.4-server-amd64.iso"
+
+# Main user to setup for the server (with passwordless sudo)
+packer_ovf_username: ansible
+packer_ovf_userpasswd: ansiblesuperstrongunsecurepassphrase
+
+packer_ovf_preseed_apt_pkgs: >
+  openssh-server
+# cryptsetup
+# build-essential
+# libssl-dev
+# libreadline-dev
+# zlib1g-dev
+# linux-source
+# dkms
+# nfs-common
+
+layout_code: fr
+debian_installer_locale: fr_FR
+kblayout: FR
+kbvariant: FR
+vm_hostname: ubulabserver
+
+shutdown_command: sudo poweroff
+
+packer_ovf_boot_command: >
+  <esc><wait><esc><wait><enter><wait>/install/vmlinuz auto
+  console-setup/ask_detect=false
+  console-setup/layoutcode={{ layout_code }}
+  console-setup/modelcode=pc105
+  debconf/frontend=noninteractive
+  debian-installer={{ debian_installer_locale }}
+  fb=false
+  initrd=/install/initrd.gz
+  kbd-chooser/method=us
+  keyboard-configuration/layout={{ kblayout }}
+  keyboard-configuration/variant={{ kbvariant }}
+  locale={{ debian_installer_locale }} netcfg/get_domain=vm
+  netcfg/get_hostname={{ vm_hostname }}
+  grub-installer/bootdev=/dev/sda
+  noapic preseed/url=http://{{'{{'}}.HTTPIP{{'}}'}}:{{'{{'}}.HTTPPort{{'}}'}}/preseed.cfg
+  -- <enter><wait>
