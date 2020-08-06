@@ -1,0 +1,25 @@
+{
+  "builders": [
+    {
+      "type": "lxd",
+      "name": "build-centos-8",
+      "image": "images:centos/8/amd64",
+      "output_image": "packer-lxd-centos-8",
+      "publish_properties": {
+          "description": "Image of centos 8 build with Packer "
+      }
+    }
+  ],
+  "provisioners": [
+
+  ],
+  "post-processors": [
+    {
+      "type": "shell-local",
+      "inline": [
+          "lxc image export packer-lxd-centos-8 $(pwd)/output-lxd/packer-lxd-centos-8_$(date +'%y%m%d_%H%M')",
+          "lxc image delete packer-lxd-centos-8"
+      ]
+    }
+  ]
+}

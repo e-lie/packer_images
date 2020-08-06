@@ -18,7 +18,7 @@ d-i partman/confirm boolean true
 d-i partman/confirm_nooverwrite boolean true
 d-i partman/confirm_write_new_label boolean true
 # TODO: deduplicate from ../scripts/ubuntu_ovf_setup_1.sh apt-get install steps later?
-d-i pkgsel/include string {{ packer_ovf_preseed_apt_pkgs }} 
+d-i pkgsel/include string {{ packer_vbox_iso_preseed_apt_pkgs }} 
 d-i pkgsel/install-language-support boolean false
 d-i pkgsel/update-policy select none
 d-i pkgsel/upgrade select full-upgrade
@@ -26,16 +26,16 @@ d-i time/zone string UTC
 tasksel tasksel/first multiselect standard, ubuntu-server
 
 d-i console-setup/ask_detect boolean false
-d-i keyboard-configuration/layoutcode string {{ layout_code }}
+d-i keyboard-configuration/layoutcode string {{ packer_vbox_iso_layout_code }}
 d-i keyboard-configuration/modelcode string pc105
-d-i debian-installer/locale string {{ debian_installer_locale }}
+d-i debian-installer/locale string {{ packer_vbox_iso_debian_installer_locale }}
 
-# Create {{ packer_ovf_username }} user account.
-d-i passwd/user-fullname string {{ packer_ovf_username }}
-d-i passwd/username string {{ packer_ovf_username }}
-d-i passwd/user-password password {{ packer_ovf_userpasswd }}
-d-i passwd/user-password-again password {{ packer_ovf_userpasswd }}
+# Create {{ packer_ssh_username }} user account.
+d-i passwd/user-fullname string {{ packer_ssh_username }}
+d-i passwd/username string {{ packer_ssh_username }}
+d-i passwd/user-password password {{ packer_ssh_userpasswd }}
+d-i passwd/user-password-again password {{ packer_ssh_userpasswd }}
 d-i user-setup/allow-password-weak boolean true
 d-i user-setup/encrypt-home boolean false
-d-i passwd/user-default-groups {{ packer_ovf_username }} sudo
+d-i passwd/user-default-groups {{ packer_ssh_username }} sudo
 d-i passwd/user-uid string 900

@@ -1,29 +1,16 @@
-# - name: Template linux preseed file
-#   template:
-#     src: preseed.cfg.j2
-#     dest: ./http/preseed.cfg
 
-# - name: Template provisionning script part 1
-#   template:
-#     src: ubuntu_ovf_setup_1.sh.j2
-#     dest: ./scripts/ubuntu_ovf_setup_1.sh
-
-# - name: Template provisionning script part 2
-#   template:
-#     src: ubuntu_ovf_setup_2.sh.j2
-#     dest: ./scripts/ubuntu_ovf_setup_2.sh
-
-# - name: Template Packer json config
-#   template:
-#     src: ubuntu_iso_to_ovf.json.j2
-#     dest: ./ubuntu_iso_to_ovf.json
-
-# - name: Template Packer json config
-#   template:
-#     src: ubuntu_ovf_to_ovf.json.j2
-#     dest: ./ubuntu_ovf_to_ovf.json
 
 - name: Template Packer json config
   template:
-    src: ubuntu_lxd.json.j2
-    dest: ./ubuntu_lxd.json
+    src: generic_packer_template.j2
+    dest: ./tpl_{{ packer_output_image }}.json
+
+- name: Template linux preseed file
+  template:
+    src: configs/preseed.cfg.j2
+    dest: ./http/preseed.cfg
+  when: packer_build_type == 'vbox_iso'
+
+- name: Execute packer build
+  shell:
+    cmd: packer build ./tpl_{{ packer_output_image }}.json > build_{{ packer_output_image }}.log 2>&1

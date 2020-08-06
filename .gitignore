@@ -1,5 +1,5 @@
 packer_cache
-output_images
-output-virtualbox-ovf
+output-lxd
+output-*
 *.log
 geerlingguy.*

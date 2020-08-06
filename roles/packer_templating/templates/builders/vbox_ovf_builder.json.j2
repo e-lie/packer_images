@@ -1,0 +1,25 @@
+    {
+      "type": "virtualbox-ovf",
+
+      "source_path": "{{ packer_input_image }}",
+
+      "vm_name": "{{ packer_instance_name }}",
+      "output_filename": "{{ packer_output_image }}",
+
+      "vboxmanage": [
+          ["modifyvm", "{{'{{'}}.Name{{'}}'}}", "--memory", {{ packer_vbox_memory }}],
+          ["modifyvm", "{{'{{'}}.Name{{'}}'}}", "--cpus", {{ packer_vbox_vcpu_count }}]
+      ],
+
+
+      "headless": {{ packer_vbox_headless }},
+
+      "ssh_password": "{{ packer_ssh_userpasswd }}",
+      "ssh_port": 22,
+      "ssh_username": "{{ packer_ssh_username }}",,
+      "ssh_wait_timeout": "60s",
+
+      "shutdown_command": "{{ packer_vbox_shutdown_command }}",
+
+      "virtualbox_version_file": ".vbox_version"
+    }

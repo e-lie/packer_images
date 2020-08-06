@@ -1,0 +1,25 @@
+{
+  "builders": [
+    {
+      "type": "lxd",
+      "name": "build-ubuntu-bionic",
+      "image": "images:ubuntu/bionic/amd64",
+      "output_image": "packer-lxd-ubuntu-bionic",
+      "publish_properties": {
+          "description": "Image of ubuntu bionic build with Packer "
+      }
+    }
+  ],
+  "provisioners": [
+
+  ],
+  "post-processors": [
+    {
+      "type": "shell-local",
+      "inline": [
+          "lxc image export packer-lxd-ubuntu-bionic $(pwd)/output-lxd/packer-lxd-ubuntu-bionic_$(date +'%y%m%d_%H%M')",
+          "lxc image delete packer-lxd-ubuntu-bionic"
+      ]
+    }
+  ]
+}

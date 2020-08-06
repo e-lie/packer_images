@@ -1,5 +1,54 @@
-- name: Template Packer files to produce OVF from linux ISO
+- name: Template Packer files to produce {{ packer_os }} {{ packer_os_version }} {{ packer_build_type }} image
   hosts: localhost
 
   roles:
+    # - name: packer_templating
+    #   vars:
+    #     packer_build_type: lxd
+    #     packer_os: ubuntu
+    #     packer_os_version: bionic
+    #     packer_input_image: "images:ubuntu/bionic/amd64"
+    #     packer_provision_modules: []
+    #       # - name: ssh
+    #       #   type: simple_shell
+    #       #   file: setup_packer_ssh.sh
+    #       # - name: x2go
+    #       #   type: ansible
+    #       #   file: x2go_ubuntu_setup.yml
+    #     packer_postprocessor_modules:
+    #       - name: lxd_export_img
+    #         type: inline_shell_local
+
     - name: packer_templating
+      vars:
+        packer_build_type: lxd
+        packer_os: centos
+        packer_os_version: 8
+        packer_input_image: "images:centos/8/amd64"
+        packer_provision_modules: []
+          # - name: ssh
+          #   type: simple_shell
+          #   file: setup_packer_ssh.sh
+          # - name: x2go
+          #   type: ansible
+          #   file: x2go_ubuntu_setup.yml
+        packer_postprocessor_modules:
+          - name: lxd_export_img
+            type: inline_shell_local
+
+    # - name: packer_templating
+    #   vars:
+    #     packer_build_type: vbox_iso
+    #     packer_os: ubuntu
+    #     packer_os_version: bionic
+    #     packer_input_image: "http://cdimage.ubuntu.com/ubuntu/releases/bionic/release/ubuntu-18.04.4-server-amd64.iso"
+    #     packer_input_image_checksum: "sha256:e2ecdace33c939527cbc9e8d23576381c493b071107207d2040af72595f8990b"
+    #     packer_provision_modules: []
+    #       # - name: ssh
+    #       #   type: simple_shell
+    #       #   file: setup_packer_ssh.sh
+    #       # - name: x2go
+    #       #   type: ansible
+    #       #   file: x2go_ubuntu_setup.yml
+    #     packer_postprocessor_modules: []
+

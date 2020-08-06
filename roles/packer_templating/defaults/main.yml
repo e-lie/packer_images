@@ -6,13 +6,21 @@ packer_instance_name: build-{{ packer_os }}-{{ packer_os_version }}
 packer_input_image: images:{{ packer_os }}/{{ packer_os_version }}/amd64
 packer_output_image: packer-{{ packer_build_type }}-{{ packer_os }}-{{ packer_os_version }}
 
-packer_provision_modules:
+packer_provision_modules: []
   # - name: ssh
   #   type: simple_shell
   #   file: setup_packer_ssh.sh
-  - name: x2go
-    type: ansible
-    file: x2go_ubuntu_setup.yml
+  # - name: x2go
+  #   type: ansible
+  #   file: x2go_ubuntu_setup.yml
+
+packer_postprocessor_modules: []
+  # - name: lxd_export_img
+  #   type: inline_shell_local
+
+
+
+packer_output_desc: Image of {{ packer_os }} {{ packer_os_version }} build with Packer {% for module in packer_provision_modules %}{% if loop.first %}including {% endif %}{{ module.name }}{% endfor %}
 
 packer_ssh_username: packer
 packer_ssh_userpasswd: packerpasswd
@@ -20,53 +28,38 @@ packer_ssh_userpasswd: packerpasswd
 packer_ansible_ssh_username: stagiaire
 packer_ansible_ssh_userpasswd: devops101
 
-packer_output_desc: Image of {{ packer_os }} {{ packer_os_version }} build with Packer
+packer_vbox_headless: "true"
+packer_vbox_memory: "512"
+packer_vbox_vcpu_count: "1"
 
+packer_vbox_shutdown_command: echo '{{ packer_ssh_userpasswd }}' | sudo -S sh -c poweroff
 
-packer_ovf_iso_url: "http://cdimage.ubuntu.com/ubuntu/releases/bionic/release/ubuntu-18.04.4-server-amd64.iso"
-packer_ovf_iso_checksum: "sha256:e2ecdace33c939527cbc9e8d23576381c493b071107207d2040af72595f8990b"
+packer_vbox_iso_layout_code: fr
+packer_vbox_iso_debian_installer_locale: fr_FR
+packer_vbox_iso_kblayout: FR
+packer_vbox_iso_kbvariant: FR
+packer_vbox_iso_vm_hostname: ubulabserver
 
-packer_ovf_iso_output_ovf: ubuntu_ansible_base
-
-# Main user to setup for the server (with passwordless sudo)
-packer_ovf_username: ansible
-packer_ovf_userpasswd: ansiblesuperstrongunsecurepassphrase
-
-packer_ovf_baseimg: packer-virtualbox-iso-ubuntu-18.04.ovf 
-
-packer_ovf_preseed_apt_pkgs: >
-  openssh-server
-# cryptsetup
-# build-essential
-# libssl-dev
-# libreadline-dev
-# zlib1g-dev
-# linux-source
-# dkms
-# nfs-common
-
-layout_code: fr
-debian_installer_locale: fr_FR
-kblayout: FR
-kbvariant: FR
-vm_hostname: ubulabserver
-
-shutdown_command: echo '{{ packer_ovf_userpasswd }}' | sudo -S sh -c poweroff
-
-packer_ovf_boot_command: >
+packer_vbox_iso_boot_command: >-
   <esc><wait><esc><wait><enter><wait>/install/vmlinuz auto
   console-setup/ask_detect=false
-  console-setup/layoutcode={{ layout_code }}
+  console-setup/layoutcode={{ packer_vbox_iso_layout_code }}
   console-setup/modelcode=pc105
   debconf/frontend=noninteractive
-  debian-installer={{ debian_installer_locale }}
+  debian-installer={{ packer_vbox_iso_debian_installer_locale }}
   fb=false
   initrd=/install/initrd.gz
   kbd-chooser/method=us
-  keyboard-configuration/layout={{ kblayout }}
-  keyboard-configuration/variant={{ kbvariant }}
-  locale={{ debian_installer_locale }} netcfg/get_domain=vm
-  netcfg/get_hostname={{ vm_hostname }}
+  keyboard-configuration/layout={{ packer_vbox_iso_kblayout }}
+  keyboard-configuration/variant={{ packer_vbox_iso_kbvariant }}
+  locale={{ packer_vbox_iso_debian_installer_locale }} netcfg/get_domain=vm
+  netcfg/get_hostname={{ packer_vbox_iso_vm_hostname }}
   grub-installer/bootdev=/dev/sda
   noapic preseed/url=http://{{'{{'}}.HTTPIP{{'}}'}}:{{'{{'}}.HTTPPort{{'}}'}}/preseed.cfg
   -- <enter><wait>
+
+
+packer_vbox_iso_preseed_apt_pkgs: >
+  openssh-server
+
+

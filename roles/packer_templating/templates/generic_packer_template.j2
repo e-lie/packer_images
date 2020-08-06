@@ -1,0 +1,21 @@
+{
+  "builders": [
+{% include 'builders/' + packer_build_type + '_builder.json.j2' %}
+
+  ],
+  "provisioners": [
+{% for provisionner in packer_provision_modules %}
+{% include 'provisionners/' + provisionner.type + '_provisionner.json.j2' %}{% if not loop.last %},{% endif %}
+
+{% endfor %}
+
+{# ALWAYS remove unsecure packer ssh user #}
+{# {% include 'provisionners/remove_packer_user.json.j2' %} #}
+  ],
+  "post-processors": [
+{% for postprocessor in packer_postprocessor_modules %}
+{% include 'postprocessors/' + postprocessor.name + '_postprocess.json.j2' %}{% if not loop.last %},{% endif %}
+
+{% endfor %}
+  ]
+}

@@ -1,0 +1,35 @@
+{
+      "type": "virtualbox-iso",
+
+      "iso_url": "{{ packer_input_image }}",
+      "iso_checksum": "{{ packer_input_image_checksum }}",
+
+      "vm_name": "{{ packer_instance_name }}",
+      "output_filename": "{{ packer_output_image }}",
+
+      "boot_command": "{{ packer_vbox_iso_boot_command }}",
+      "boot_wait": "10s",
+
+      "vboxmanage": [
+          ["modifyvm", "{{'{{'}}.Name{{'}}'}}", "--memory", {{ packer_vbox_memory }}],
+          ["modifyvm", "{{'{{'}}.Name{{'}}'}}", "--cpus", {{ packer_vbox_vcpu_count }}]
+      ],
+
+      "guest_additions_path": "VBoxGuestAdditions_{{'{{'}}.Version{{'}}'}}.iso",
+      "guest_os_type": "Ubuntu_64",
+
+      "hard_drive_interface": "sata",
+      "sata_port_count": "8",
+
+      "headless": {{ packer_vbox_headless }},
+
+      "http_directory": "http",
+      "ssh_password": "{{ packer_ssh_userpasswd }}",
+      "ssh_port": 22,
+      "ssh_username": "{{ packer_ssh_username }}",
+      "ssh_wait_timeout": "10000s",
+
+      "shutdown_command": "{{ packer_vbox_shutdown_command }}",
+
+      "virtualbox_version_file": ".vbox_version"
+    }
