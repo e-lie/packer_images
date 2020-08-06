@@ -1,0 +1,10 @@
+- name: Remove packer unsecure setup user
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: remove packer unsecure user
+      user:
+        name: packer
+        state: absent
+      

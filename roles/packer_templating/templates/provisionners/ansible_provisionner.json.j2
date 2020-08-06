@@ -1,0 +1,13 @@
+    {
+      "type": "ansible",
+      "playbook_file": "./packer_provision/{{ provisionner.file }}",
+      "user": "{{ packer_ssh_username }}",
+{% if packer_build_type == 'lxd' %}
+      "extra_arguments": [
+        "--extra-vars",
+        "ansible_host=packer-{{ packer_instance_name }}  ansible_connection=lxd ansible_python_interpreter=/usr/bin/python3"
+      ],
+{% endif %}
+      "roles_path": "./roles",
+      "galaxy_file": "./roles/requirements.yml"
+    }

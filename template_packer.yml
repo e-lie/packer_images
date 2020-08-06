@@ -2,4 +2,4 @@
   hosts: localhost
 
   roles:
-    - name: packer_virtualbox_iso_ovf
+    - name: packer_templating

@@ -1,0 +1,9 @@
+    {
+      "type": "ansible",
+      "playbook_file": "./packer_provision/{{ provisionner.file }}",
+      "user": "{{ packer_ssh_username }}",
+      "extra_arguments": [ "-c", "lxd" , "--extra-vars", "ansible_ssh_pass={{ packer_ssh_userpasswd }} ansible_become_pass={{ packer_ssh_userpasswd }}"],
+      "inventory_file_template": "{{ .HostAlias }} ansible_host={{ .Host }} ansible_user={{ .User }} ansible_port={{ .Port }} ansible_ssh_pass={{ packer_ssh_userpasswd }} ansible_become_pass={{ packer_ssh_userpasswd }}\n",
+      "roles_path": "./roles",
+      "galaxy_file": "./roles/requirements.yml"
+    }

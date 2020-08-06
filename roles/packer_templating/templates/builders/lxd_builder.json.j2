@@ -1,0 +1,9 @@
+    {
+      "type": "lxd",
+      "name": "{{ packer_instance_name }}",
+      "image": "{{ packer_input_image }}",
+      "output_image": "{{ packer_output_image }}",
+      "publish_properties": {
+          "description": "{{ packer_output_desc }}"
+      }
+    }

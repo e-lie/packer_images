@@ -1,0 +1,45 @@
+{
+  "builders": [
+    {
+      "type": "lxd",
+      "name": "build-ubuntu-focal",
+      "image": "images:ubuntu/focal/amd64",
+      "output_image": "packer-lxd-ubuntu-focal",
+      "publish_properties": {
+          "description": "Image of ubuntu focal build with Packer"
+      }
+    }
+
+  ],
+  "provisioners": [
+    {
+      "type": "ansible",
+      "playbook_file": "./packer_provision/x2go_ubuntu_setup.yml",
+      "user": "packer",
+      "extra_arguments": [
+        "--extra-vars",
+        "ansible_host=packer-build-ubuntu-focal  ansible_connection=lxd ansible_python_interpreter=/usr/bin/python3"
+      ],
+      "roles_path": "./roles",
+      "galaxy_file": "./roles/requirements.yml"
+    },
+
+
+    {
+      "type": "ansible",
+      "playbook_file": "./packer_provision/remove_packer_user.yml",
+      "user": "stagiaire",
+      "extra_arguments": [ "--extra-vars", "ansible_ssh_pass=devops101 ansible_become_pass=devops101" ]
+    }
+  ],
+  "post-processors": [
+
+    {
+      "type": "shell-local",
+      "inline": [
+          "lxc image export packer-lxd-ubuntu-focal $(pwd)/output_images/packer-lxd-ubuntu-focal_$(date +'%y%m%d_%H%M')",
+          "lxc image delete packer-lxd-ubuntu-focal"
+      ]
+    }
+  ]
+}

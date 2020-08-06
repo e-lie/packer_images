@@ -1,3 +1,5 @@
 packer_cache
 output_images
-ansible.log
+output-virtualbox-ovf
+*.log
+geerlingguy.*

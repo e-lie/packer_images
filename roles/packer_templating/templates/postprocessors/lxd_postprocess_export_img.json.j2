@@ -1,0 +1,7 @@
+    {
+      "type": "shell-local",
+      "inline": [
+          "lxc image export {{ packer_output_image }} $(pwd)/output_images/{{ packer_output_image }}_$(date +'%y%m%d_%H%M')",
+          "lxc image delete {{ packer_output_image }}"
+      ]
+    }

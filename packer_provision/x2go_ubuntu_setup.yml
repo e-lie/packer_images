@@ -1,0 +1,30 @@
+- name: provision packer test
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: install xubuntu core
+      apt:
+        name: xubuntu-core
+        state: present
+
+    - name: install x2go server
+      apt:
+        name:
+          - x2goserver
+          - x2goserver-session
+        state: present
+
+    - name: install basic softwares
+      apt:
+        name:
+          - firefox
+        state: present
+
+    # - name: configure xfce look and feel
+      # - firefox extensions: ublock
+      # - change theme and icons
+      # - remove bottom dock and move the upper one down
+    
+
+    

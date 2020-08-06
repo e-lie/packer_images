@@ -1,0 +1,10 @@
+- name: System upgrade
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: install xubuntu core
+      apt:
+        state: present
+      when: ansible_os_family == 'Debian'
+      

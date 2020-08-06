@@ -1,9 +1,38 @@
-packer_ovf_iso_checksum: "sha256:e2ecdace33c939527cbc9e8d23576381c493b071107207d2040af72595f8990b"
+packer_build_type: lxd
+packer_os: ubuntu
+packer_os_version: focal
+
+packer_instance_name: build-{{ packer_os }}-{{ packer_os_version }}
+packer_input_image: images:{{ packer_os }}/{{ packer_os_version }}/amd64
+packer_output_image: packer-{{ packer_build_type }}-{{ packer_os }}-{{ packer_os_version }}
+
+packer_provision_modules:
+  # - name: ssh
+  #   type: simple_shell
+  #   file: setup_packer_ssh.sh
+  - name: x2go
+    type: ansible
+    file: x2go_ubuntu_setup.yml
+
+packer_ssh_username: packer
+packer_ssh_userpasswd: packerpasswd
+
+packer_ansible_ssh_username: stagiaire
+packer_ansible_ssh_userpasswd: devops101
+
+packer_output_desc: Image of {{ packer_os }} {{ packer_os_version }} build with Packer
+
+
 packer_ovf_iso_url: "http://cdimage.ubuntu.com/ubuntu/releases/bionic/release/ubuntu-18.04.4-server-amd64.iso"
+packer_ovf_iso_checksum: "sha256:e2ecdace33c939527cbc9e8d23576381c493b071107207d2040af72595f8990b"
+
+packer_ovf_iso_output_ovf: ubuntu_ansible_base
 
 # Main user to setup for the server (with passwordless sudo)
 packer_ovf_username: ansible
 packer_ovf_userpasswd: ansiblesuperstrongunsecurepassphrase
+
+packer_ovf_baseimg: packer-virtualbox-iso-ubuntu-18.04.ovf 
 
 packer_ovf_preseed_apt_pkgs: >
   openssh-server
@@ -22,7 +51,7 @@ kblayout: FR
 kbvariant: FR
 vm_hostname: ubulabserver
 
-shutdown_command: sudo poweroff
+shutdown_command: echo '{{ packer_ovf_userpasswd }}' | sudo -S sh -c poweroff
 
 packer_ovf_boot_command: >
   <esc><wait><esc><wait><enter><wait>/install/vmlinuz auto

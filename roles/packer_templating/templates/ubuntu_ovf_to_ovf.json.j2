@@ -1,0 +1,39 @@
+{
+  "builders": [
+    {
+      "type": "virtualbox-ovf",
+
+      "source_path": "./output-virtualbox-iso/{{ packer_ovf_baseimg }}",
+
+      "vm_name": "packer-virtualbox-ovf-ubuntu-18.04",
+      "output_filename": "packer-virtualbox-ovf-ubuntu-18.04",
+
+      "vboxmanage": [
+          ["modifyvm", "{{'{{'}}.Name{{'}}'}}", "--memory", 512],
+          ["modifyvm", "{{'{{'}}.Name{{'}}'}}", "--cpus", 1]
+      ],
+
+      "headless": true,
+
+      "ssh_password": "{{ packer_ovf_userpasswd }}",
+      "ssh_port": 22,
+      "ssh_username": "{{ packer_ovf_username }}",
+      "ssh_wait_timeout": "60s",
+
+      "shutdown_command": "{{ shutdown_command }}",
+
+      "virtualbox_version_file": ".vbox_version"
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "ansible",
+      "playbook_file": "./packer_provision/test.yml",
+      "user": "{{ packer_ovf_username }}",
+      "extra_arguments": [ "--extra-vars", "ansible_ssh_pass={{ packer_ovf_userpasswd }}" ],
+      "roles_path": "./roles",
+      "galaxy_file": "./roles/requirements.yml"
+    }
+  ]
+}
+

@@ -1,0 +1,6 @@
+    {
+      "type": "ansible",
+      "playbook_file": "./packer_provision/remove_packer_user.yml",
+      "user": "{{ packer_ansible_ssh_username }}",
+      "extra_arguments": [ "--extra-vars", "ansible_ssh_pass={{ packer_ansible_ssh_userpasswd }} ansible_become_pass={{ packer_ansible_ssh_userpasswd }}" ]
+    }
