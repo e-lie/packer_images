@@ -1,0 +1,41 @@
+{
+  "builders": [
+    {
+      "type": "virtualbox-ovf",
+
+      "source_path": "./output-virtualbox-iso/packer-vbox_iso-ubuntu-bionic.ovf",
+
+      "vm_name": "build-ubuntu-bionic",
+      "output_filename": "packer-vbox_ovf-ubuntu-bionic",
+
+      "vboxmanage": [
+          ["modifyvm", "{{.Name}}", "--memory", 512],
+          ["modifyvm", "{{.Name}}", "--cpus", 1]
+      ],
+
+
+      "headless": true,
+
+      "ssh_password": "packerpasswd",
+      "ssh_port": 22,
+      "ssh_username": "packer",
+      "ssh_wait_timeout": "60s",
+
+      "shutdown_command": "echo 'packerpasswd' | sudo -S sh -c poweroff",
+
+      "virtualbox_version_file": ".vbox_version"
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "ansible",
+      "playbook_file": "./packer_provision/cli_utils_setup.yml",
+      "user": "packer",
+      "roles_path": "./roles",
+      "galaxy_file": "./roles/requirements.yml"
+    }
+
+  ],
+  "post-processors": [
+  ]
+}

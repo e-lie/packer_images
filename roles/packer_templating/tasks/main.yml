@@ -13,4 +13,4 @@
 
 - name: Execute packer build
   shell:
-    cmd: packer build ./tpl_{{ packer_output_image }}.json > build_{{ packer_output_image }}.log 2>&1
+    cmd: packer build ./tpl_{{ packer_output_image }}.json 2>&1 | tee build_{{ packer_output_image }}.log

@@ -1,0 +1,3 @@
+
+lab_pubkey_path: /home/elie/.ssh/id_lxd_ansible_lab.pub
+lab_ssh_user: ansible

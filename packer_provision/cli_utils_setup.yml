@@ -1,0 +1,20 @@
+- name: Setup CLI utils
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: install epel
+      yum:
+        name: epel-release
+        state: present
+      when: ansible_os_family == 'Redhat'
+
+    - name: install cli utils
+      package:
+        name:
+          - htop
+          - ncdu 
+        state: present
+    
+
+    

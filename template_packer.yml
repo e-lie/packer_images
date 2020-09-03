@@ -1,13 +1,34 @@
 - name: Template Packer files to produce {{ packer_os }} {{ packer_os_version }} {{ packer_build_type }} image
   hosts: localhost
 
+
   roles:
+    - name: packer_templating
+      vars:
+        packer_build_type: lxd
+        packer_os: ubuntu
+        packer_os_version: bionic
+        packer_input_image: "images:ubuntu/bionic/amd64"
+        packer_provision_modules:
+            - name: ssh
+              type: ansible
+              file: setup_lab_ssh.yml
+          # - name: ssh
+          #   type: simple_shell
+          #   file: setup_packer_ssh.sh
+          # - name: x2go
+          #   type: ansible
+          #   file: x2go_ubuntu_setup.yml
+        packer_postprocessor_modules: []
+          # - name: lxd_export_img
+          #   type: inline_shell_local
+
     # - name: packer_templating
     #   vars:
     #     packer_build_type: lxd
-    #     packer_os: ubuntu
-    #     packer_os_version: bionic
-    #     packer_input_image: "images:ubuntu/bionic/amd64"
+    #     packer_os: centos
+    #     packer_os_version: 8
+    #     packer_input_image: "images:centos/8/amd64"
     #     packer_provision_modules: []
     #       # - name: ssh
     #       #   type: simple_shell
@@ -18,23 +39,6 @@
     #     packer_postprocessor_modules:
     #       - name: lxd_export_img
     #         type: inline_shell_local
-
-    - name: packer_templating
-      vars:
-        packer_build_type: lxd
-        packer_os: centos
-        packer_os_version: 8
-        packer_input_image: "images:centos/8/amd64"
-        packer_provision_modules: []
-          # - name: ssh
-          #   type: simple_shell
-          #   file: setup_packer_ssh.sh
-          # - name: x2go
-          #   type: ansible
-          #   file: x2go_ubuntu_setup.yml
-        packer_postprocessor_modules:
-          - name: lxd_export_img
-            type: inline_shell_local
 
     # - name: packer_templating
     #   vars:
@@ -51,4 +55,17 @@
     #       #   type: ansible
     #       #   file: x2go_ubuntu_setup.yml
     #     packer_postprocessor_modules: []
+
+    # - name: packer_templating
+    #   vars:
+    #     packer_build_type: vbox_ovf
+    #     packer_os: ubuntu
+    #     packer_os_version: bionic
+    #     packer_input_image: "./output-virtualbox-iso/packer-vbox_iso-ubuntu-bionic.ovf"
+    #     packer_provision_modules:
+    #       - name: cli_utils
+    #         type: ansible
+    #         file: cli_utils_setup.yml
+    #     packer_postprocessor_modules: []
+
 

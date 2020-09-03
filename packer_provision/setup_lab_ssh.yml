@@ -1,0 +1,55 @@
+- name: Setup "{{ lab_ssh_user }}" lab ssh on lxd container
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: install openssh
+      package:
+        name: openssh-server
+        state: present
+
+    - name: ensure sshd is started
+      systemd:
+        name: sshd
+        state: started
+
+    - name: ensure ansible user is present
+      user:
+        name: "{{ lab_ssh_user }}"
+        state: present
+        groups: ["sudo"]
+        append: yes
+        shell: /bin/bash
+        create_home: yes
+
+    - name: ensure sudo group has passwordless escalation
+      lineinfile:
+        path: /etc/sudoers
+        state: present
+        regexp: '^%sudo ALL='
+        line: '%sudo ALL=(ALL) NOPASSWD: ALL'
+        validate: /usr/sbin/visudo -cf %s
+
+    - name: provision ssh public key
+      authorized_key:
+        user: "{{ lab_ssh_user }}"
+        key: "{{ lookup('file', lab_pubkey_path ) }}"
+        state: present
+
+    - name: Disable Root ssh login
+      lineinfile:
+        dest: /etc/ssh/sshd_config
+        regexp: '^PermitRootLogin'
+        line: "PermitRootLogin no"
+        state: present
+        backup: yes
+      notify:
+        - restart ssh
+
+  handlers:
+    - name: restart ssh
+      service:
+        name: sshd
+        state: restarted
+
+      
